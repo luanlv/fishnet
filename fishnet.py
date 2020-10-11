@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 
@@ -874,7 +874,7 @@ class Worker(threading.Thread):
         self.stockfish_info["options"]["threads"] = str(self.threads)
         self.stockfish_info["options"]["hash"] = str(self.memory)
         self.stockfish_info["options"]["analysis contempt"] = "Off"
-        if self.stockfish_info["name"] is None :
+        if not "name" in self.stockfish_info :
             self.stockfish_info["name"] = "Engine"
 
         # Custom options
@@ -956,13 +956,14 @@ class Worker(threading.Thread):
         isready(self.stockfish)
 
         # movetime = int(round(LVL_MOVETIMES[lvl - 1] / (self.threads * 0.9 ** (self.threads - 1))))
-        movetime = LVL_MOVETIMES[lvl-1]
+        movetime = random.randrange(LVL_MOVETIMES[lvl-1], LVL_MOVETIMES[lvl-1] + 50)
+        lvlDepth = random.randrange(LVL_DEPTHS[lvl - 1] - 1, LVL_DEPTHS[lvl - 1] + 1 )
         # logging.warning("MOVETIME")
         # logging.warning(movetime)
         start = time.time()
         go(self.stockfish, job["position"], moves,
            movetime=movetime, clock=job["work"].get("clock"),
-           depth=LVL_DEPTHS[lvl - 1])
+           depth=lvlDepth)
         bestmove = recv_bestmove(self.stockfish)
         end = time.time()
 
